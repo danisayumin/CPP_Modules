@@ -1,20 +1,40 @@
-CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+NAME = zombieHorde
+CC = c++
+FLAGS = -Wall -Wextra -Werror -std=c++98
+RM = rm -rf
+INC = -I ./
+LEAK = valgrind --leak-check=full --show-leak-kinds=all
 
-SRCS = main.cpp Zombie.cpp zombieHorde.cpp
-OBJS = $(SRCS:.cpp=.o)
-NAME = zombie
+SRCS_DIR = ./
+OBJS_DIR = objs/
+
+FILE = main \
+			 Zombie \
+			 zombieHorde
+
+OBJS = $(addprefix $(OBJS_DIR), $(addsuffix .o, $(FILE)))
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp | $(OBJS_DIR)
+	$(CC) $(FLAGS) $(INC) -c $< -o $@
+
+$(OBJS_DIR):
+	mkdir -p $(OBJS_DIR)
+	mkdir -p $(OBJS_DIR)$(EX_DIR)
+
+val:
+	@make
+	@$(LEAK) ./$(NAME)	
 
 clean:
-	rm -f $(OBJS)
+	$(RM) $(OBJS_DIR)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 

@@ -6,7 +6,7 @@
 /*   By: dsayumi- <dsayumi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:10:12 by dsayumi-          #+#    #+#             */
-/*   Updated: 2025/02/25 20:20:08 by dsayumi-         ###   ########.fr       */
+/*   Updated: 2025/03/10 18:33:26 by dsayumi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	main()
 	std::cout << "string ref address : " << &stringREF << std::endl;
 	
 	std::cout << "string value : " << string << std::endl;
-	std::cout << "string ptr value : " << stringPTR << std::endl;
+	std::cout << "string ptr value : " << *stringPTR << std::endl;
 	std::cout << "string ref value : " << stringREF << std::endl;
+
+	return 0;
 }
