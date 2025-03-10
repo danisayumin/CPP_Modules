@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danielasayuminitta <danielasayuminitta@    +#+  +:+       +#+        */
+/*   By: dsayumi- <dsayumi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 20:55:45 by danielasayu       #+#    #+#             */
-/*   Updated: 2025/02/24 21:39:20 by danielasayu      ###   ########.fr       */
+/*   Updated: 2025/03/10 17:21:57 by dsayumi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Zombie.hpp"
 
-int main() {
-    Zombie* heapZombie = newZombie("HeapZombie");
-    heapZombie->announce();
-    delete heapZombie;
+int main()
+{
+    Zombie  *zombie = newZombie("HeapZombie");
+    zombie->announce();
     randomChump("StackZombie");
-
+    delete zombie;
     return 0;
 }

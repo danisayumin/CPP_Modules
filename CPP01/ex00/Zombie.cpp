@@ -6,19 +6,23 @@
 /*   By: dsayumi- <dsayumi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:39:44 by danielasayu       #+#    #+#             */
-/*   Updated: 2025/02/25 20:07:57 by dsayumi-         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:25:16 by dsayumi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Zombie.hpp"
-#include <iostream>
 
-Zombie::Zombie(std::string name) : name(name) {}
-
-Zombie::~Zombie() {
-    std::cout << name << " has been destroyed." << std::endl;
+Zombie::Zombie(std::string name)
+{
+  this->_name = name;
 }
 
-void Zombie::announce() {
-    std::cout << name << ": BraiiiiiiinnnzzzZ..." << std::endl;
+Zombie::~Zombie(void)
+{   
+    std::cout << this->_name << " has been destroyed" << std::endl;
+}
+
+void Zombie::announce(void) const
+{
+    std::cout << this->_name << ": BraiiiiiiinnnzzzZ..." << std::endl;
 }

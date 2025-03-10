@@ -3,26 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   Zombie.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: danielasayuminitta <danielasayuminitta@    +#+  +:+       +#+        */
+/*   By: dsayumi- <dsayumi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 20:49:04 by danielasayu       #+#    #+#             */
-/*   Updated: 2025/02/24 20:54:55 by danielasayu      ###   ########.fr       */
+/*   Updated: 2025/03/10 17:23:24 by dsayumi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ZOMBIE_HPP
 #define ZOMBIE_HPP
 
-#include <string>
+#include <iostream>
 
-class Zombie {
+class Zombie 
+{
 private:
-    std::string name;
+    std::string _name;
 
 public:
     Zombie(std::string name);
-    ~Zombie();
-    void announce();
+    ~Zombie(void);
+    void announce(void) const;
 };
 
 Zombie* newZombie(std::string name);
