@@ -6,23 +6,25 @@
 /*   By: danielasayuminitta <danielasayuminitta@    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 20:49:04 by danielasayu       #+#    #+#             */
-/*   Updated: 2025/02/24 20:54:55 by danielasayu      ###   ########.fr       */
+/*   Updated: 2025/03/05 23:11:18 by danielasayu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ZOMBIE_HPP
-#define ZOMBIE_HPP
+#ifndef __ZOMBIE_H__
+# define __ZOMBIE_H__
 
-#include <string>
+#include <iostream>
 
-class Zombie {
-private:
-    std::string name;
-
-public:
+class Zombie 
+{
+  public:
     Zombie(std::string name);
-    ~Zombie();
-    void announce();
+    ~Zombie(void);
+
+    void announce(void) const;
+
+  private:
+    std::string _name;
 };
 
 Zombie* newZombie(std::string name);

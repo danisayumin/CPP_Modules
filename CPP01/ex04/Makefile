@@ -1,17 +1,16 @@
-NAME = ex03
+NAME = replaceWord
 CC = c++
 FLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -rf
 INC = -I ./
 LEAK = valgrind --leak-check=full --show-leak-kinds=all
+ARGS = "test.txt" "filename" ">>abacate123"
 
 SRCS_DIR = ./
 OBJS_DIR = objs/
 
 FILE = main \
-			 HumanA \
-			 HumanB \
-			 Weapon
+			 Replace 
 
 OBJS = $(addprefix $(OBJS_DIR), $(addsuffix .o, $(FILE)))
 
@@ -27,9 +26,13 @@ $(OBJS_DIR):
 	mkdir -p $(OBJS_DIR)
 	mkdir -p $(OBJS_DIR)$(EX_DIR)
 
+run:
+	@make
+	@./$(NAME) $(ARGS)
+
 val:
 	@make
-	@$(LEAK) ./$(NAME)	
+	@$(LEAK) ./$(NAME) $(ARGS)	
 
 clean:
 	$(RM) $(OBJS_DIR)
