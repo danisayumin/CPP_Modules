@@ -1,4 +1,4 @@
-NAME = zombieHorde
+NAME = harl
 CC = c++
 FLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -rf
@@ -9,8 +9,7 @@ SRCS_DIR = ./
 OBJS_DIR = objs/
 
 FILE = main \
-			 Zombie \
-			 zombieHorde
+			 Harl
 
 OBJS = $(addprefix $(OBJS_DIR), $(addsuffix .o, $(FILE)))
 

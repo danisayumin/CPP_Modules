@@ -22,4 +22,8 @@ void Zombie::announce(void) const {
 
 void Zombie::setName(std::string name) {
   this->_name = name;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> e3b656bfac05375c8cdd958083c2951037a33326
