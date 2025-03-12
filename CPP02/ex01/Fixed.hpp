@@ -26,4 +26,4 @@ private:
 };
 std::ostream &operator<<(std::ostream &os, Fixed const &Fixed);
 
-#endif // __FIXED_HPP__
+#endif

@@ -45,4 +45,4 @@ private:
 };
 std::ostream &operator<<(std::ostream &os, Fixed const &fixedNumber);
 
-#endif // __FIXED_HPP__
+#endif
