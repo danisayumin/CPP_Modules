@@ -33,4 +33,4 @@ private:
   unsigned int _attackDamage;
 };
 
-#endif // __CLAPTRAP_HPP__
+#endif
