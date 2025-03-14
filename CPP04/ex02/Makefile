@@ -1,5 +1,5 @@
 #Basic variable
-NAME = ex01
+NAME = ex02
 CC = c++
 FLAGS = -Wall -Wextra -Werror -std=c++98
 DEPFLAGS = -MMD -MP
@@ -15,7 +15,7 @@ OBJS_DIR = objs/
 
 #Files source
 FILES = main \
-		    Animal \
+		    AAnimal \
 				Cat \
 				Dog \
 				Brain \
