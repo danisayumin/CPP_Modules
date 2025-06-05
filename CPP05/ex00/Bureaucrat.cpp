@@ -1,37 +1,87 @@
 #include "Bureaucrat.hpp"
 
 Bureaucrat::Bureaucrat() : _name("default"), _grade(150) {
-	std::cout << "Bureaucrat default constructor called" << std:: endl;
+  std::cout << "Bureaucrat default constructor called" << std::endl;
 }
 
 Bureaucrat::Bureaucrat(const std::string &name, unsigned int grade)
-	: _name(name) {
-		if (grade < 1) {
-			//throw Bureaucrat::
-		}
-	}
+    : _name(name) {
+    if (grade < 1) {
+    throw Bureaucrat::GradeTooHighException();
+  } else if (grade > 150)
+    throw Bureaucrat::GradeTooLowException();
+  std::cout << "Bureaucrat " << name << " was created, with grade: " << grade
+            << std::endl;
+  _grade = grade;
+}
 
 Bureaucrat::Bureaucrat(const Bureaucrat &copy)
-	: _name(copy._name), _grade(copy._grade) {
-		std::cout << "Copy constructor called" << std::endl;
-	}
+    : _name(copy._name), _grade(copy._grade) {
+  std::cout << "Copy constructor called" << std::endl;
+}
 
 Bureaucrat::~Bureaucrat() {
-	std::cout << "Destructor of Bureaucrat caled" << std::endl;
+  std::cout << "Destructor of Bureaucrat called" << std::endl;
 }
 
 Bureaucrat &Bureaucrat::operator=(const Bureaucrat &copy) {
-	if (this != &copy)
-		this->_grade = copy._grade;
-	return *this;
+  if (this != &copy)
+    this->_grade = copy._grade;
+  return *this;
 }
 
+std::ostream &operator<<(std::ostream &os, Bureaucrat const &Bureaucrat) {
+  os << Bureaucrat.getName() << ", bureaucrat grade " << Bureaucrat.getGrade()
+     << ".";
+  return os;
+}
 
-// try
-// {
-// /* do some stuff with bureaucrats */
-// }
-// catch (std::exception & e)
-// {
-// // /* handle exception */
-// }
+std::string Bureaucrat::getName(void) const { return this->_name; }
+
+unsigned int Bureaucrat::getGrade(void) const { return this->_grade; }
+
+void Bureaucrat::setGrade(unsigned int grade) {
+  if (grade < 1)
+    throw Bureaucrat::GradeTooHighException();
+  else if (grade > 150)
+    throw Bureaucrat::GradeTooLowException();
+  _grade = grade;
+}
+
+void Bureaucrat::incrementGrade(unsigned int level) {
+  unsigned int grade;
+  grade = this->getGrade();
+    grade -= level;
+  try {
+    this->setGrade(grade);
+    std::cout << "the grade of bureaucrat " << this->getName()
+            << ", was increment " << level << " levels" << std ::endl;
+  } catch (Bureaucrat::GradeTooLowException &e) {
+    std::cerr << e.what() << std::endl;
+  } catch (Bureaucrat::GradeTooHighException &e) {
+    std::cerr << e.what() << std ::endl;
+  }
+  }
+
+void Bureaucrat::decrementGrade(unsigned int level) {
+  unsigned int grade;
+  grade = this->getGrade();
+  grade += level;
+  try {
+    this->setGrade(grade);
+    std::cout << "the grade of bureaucrat " << this->getName()
+            << ", was decrement " << level << " levels" << std ::endl;
+  } catch (Bureaucrat::GradeTooLowException &e) {
+    std::cerr << e.what() << std::endl;
+  } catch (Bureaucrat::GradeTooHighException &e) {
+    std::cerr << e.what() << std::endl;
+  }
+ }
+
+const char *Bureaucrat::GradeTooLowException::what() const throw() {
+  return "Grade is too low!";
+}
+
+const char *Bureaucrat::GradeTooHighException::what() const throw() {
+  return "Grade is too high!";
+}
