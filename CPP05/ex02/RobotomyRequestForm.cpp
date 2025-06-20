@@ -32,6 +32,6 @@ void RobotomyRequestForm::robotomyze(std::string target) const {
     std::cout << "Robotomy failed" << std::endl;
 }
 
-void RobotomyRequestForm::action() const {
+void RobotomyRequestForm::executeAction() const {
   robotomyze(_target);
 }

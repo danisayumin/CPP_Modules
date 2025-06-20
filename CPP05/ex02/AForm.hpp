@@ -19,6 +19,7 @@ public:
   AForm();
   AForm(std::string name, unsigned int gradeToSigned,
         unsigned int gradeToExecute);
+  
   virtual ~AForm();
   AForm(const AForm &copy);
   AForm &operator=(const AForm &copy);
@@ -26,7 +27,7 @@ public:
   //pure virtual method
   virtual void beSigned(Bureaucrat &Bureaucrat);
   void execute(Bureaucrat const &executor) const;
-  virtual void action() const = 0;
+  virtual void executeAction() const = 0;
 
   const std::string getName(void) const;
   bool hasSigned(void) const;

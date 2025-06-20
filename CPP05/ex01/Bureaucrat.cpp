@@ -75,20 +75,11 @@ void Bureaucrat::decrementGrade(unsigned int level) {
 
 void Bureaucrat::signForm(Form &form) {
   try {
-    if (this->getGrade() < 1) {
-      throw Bureaucrat::GradeTooHighException();
-    } else if (this->getGrade() > 150) {
-      throw Bureaucrat::GradeTooLowException();
-    }
     form.beSigned(*this);
-    if (form.hasSigned())
-      std::cout << this->getName() << " signed " << form.getName() << std::endl;
+    std::cout << _name << " signed " << form.getName() << std::endl;
   } catch (const std::exception &e) {
-    std::cout << this->getName() << " couldn't sign " << form.getName()
-              << " because " << e.what() << std::endl;
-  } catch (...) {
-    std::cout << this->getName() << " couldn't sign " << form.getName()
-              << std::endl;
+    std::cout << _name << " couldn't sign " << form.getName()
+            << " because " << e.what() << std::endl;
   }
 }
 

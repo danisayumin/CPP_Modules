@@ -8,7 +8,7 @@ class Bureaucrat;
 class PresidentialPardonForm : public AForm {
 private:
   std::string _target;
-  void action() const;
+  void executeAction() const;
   void pardon() const;
 
 public:

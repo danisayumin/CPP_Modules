@@ -7,8 +7,7 @@ int main() {
             << std::endl;
   std::cout << std::endl;
   try {
-    std::cout << "Trying to create a new bureaucrat with grade of 200"
-              << std::endl;
+    std::cout << "Trying to create a new bureaucrat with grade of 200" << std::endl;
     Bureaucrat b1("B1", 200);
   } catch (const Bureaucrat::GradeTooLowException &e) {
     std::cerr << e.what() << std::endl;

@@ -80,7 +80,7 @@ void AForm::execute(Bureaucrat const &executor) const {
   if (executor.getGrade() > this->getGradeToExecute()) {
     throw(AForm::GradeTooLowException());
   }
-  this->action();
+  this->executeAction();
 }
 
 const char *AForm::GradeTooLowException::what() const throw() {

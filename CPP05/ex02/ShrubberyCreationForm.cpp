@@ -61,7 +61,7 @@ std::string ShrubberyCreationForm::getTarget() const {
   return _target;
 }
 
-void ShrubberyCreationForm::action() const {
+void ShrubberyCreationForm::executeAction() const {
   createTree(_target);
 }
 

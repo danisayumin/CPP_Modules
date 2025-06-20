@@ -29,7 +29,7 @@ public:
   void incrementGrade(unsigned int level = 1);
   void decrementGrade(unsigned int level = 1);
 
-  void executeForm(AForm const &form);
+  void executeForm(AForm const &form) const;
 
   class GradeTooHighException : public std::exception {
   public:

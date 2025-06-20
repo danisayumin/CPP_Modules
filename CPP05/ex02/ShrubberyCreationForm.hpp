@@ -10,7 +10,7 @@ private:
   std::string _target;
   void createTree(std::string target) const;
   void destroyTree(std::string target) const;
-  void action() const;
+  void executeAction() const;
 
 public:
   ShrubberyCreationForm();
