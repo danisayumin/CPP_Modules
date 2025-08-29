@@ -16,7 +16,7 @@ private:
   Serialize(Serialize const &src);
   ~Serialize();
   Serialize &operator=(Serialize const &rhs);
-
+ 
 public:
   static uintptr_t serialize(Data *ptr);
   static Data *deserialize(uintptr_t raw);

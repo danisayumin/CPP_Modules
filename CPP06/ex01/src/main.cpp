@@ -12,5 +12,7 @@ int main(void) {
   Data *deseData = Serialize::deserialize(seriData);
   std::cout << "s1: " << deseData->s1 << " - value: " << deseData->i
             << " - s2: " << deseData->s2 << std::endl;
+    std::cout << "Data serialize: " << seriData << std::endl;
+
   return 0;
 }

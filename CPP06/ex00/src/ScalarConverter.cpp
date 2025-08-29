@@ -1,266 +1,240 @@
-#include "ScalarConverter.hpp"
 
-ScalarConverter::ScalarConverter() {
-  std::cout << "ScalarConverter default constructor called" << std::endl;
+#include "Conversion.hpp"
+
+// Constructors
+Conversion::Conversion()
+{
+	std::cout << "Conversion Default Constructor called" << std::endl;
 }
 
-ScalarConverter::ScalarConverter(ScalarConverter const &src) {
-  std::cout << "ScalarConverter copy constructor called" << std::endl;
-  *this = src;
-}
-ScalarConverter::~ScalarConverter() {
-  std::cout << "ScalarConverter destructor called" << std::endl;
-}
-
-ScalarConverter &ScalarConverter::operator=(ScalarConverter const &rhs) {
-  (void)rhs;
-  std::cout << "ScalarConverter copy assignment operator called" << std::endl;
-  return *this;
+Conversion::Conversion(const std::string input): _input(input)
+{
+	std::cout << "Conversion Constructor for " << this->getInput() << std::endl;
+	this->_double = atof(this->getInput().c_str());
+	this->convertInput();
+	this->printOutput();
 }
 
-// verifying types
-static bool isChar(const std::string &str) {
-  if (str.length() == 1 && !std::isdigit(str[0]))
-    return true;
-  return false;
+Conversion::Conversion(const Conversion &src): _input(src.getInput())
+{
+	std::cout << "Conversion Copy Constructor called" << std::endl;
+	*this = src;
+	this->printOutput();
 }
 
-static bool isInteger(const std::string &str) {
-  for (size_t i = 0; i < str.length(); i++) {
-    if (i == 0 && (str[i] == '-' || str[i] == '+') && str.length() > 1)
-      continue;
-    if (!std::isdigit(str[i]))
-      return false;
-  }
-  return true;
+// Deconstructors
+Conversion::~Conversion()
+{
+	std::cout << "Conversion Deconstructor called" << std::endl;
 }
 
-static bool isFloat(const std::string &str) {
-  int dotCount = 0;
-  for (size_t i = 0; i < str.length(); i++) {
-    if (i == 0 && (str[i] == '-' || str[i] == '+') && str.length() > 1)
-      continue;
-    if (!std::isdigit(str[i]) && str[i] != 'f' && str[i] != '.')
-      return false;
-    if (str[i] == '.')
-      dotCount++;
-    if (str.end()[-1] == 'f' && str[i] == 'f')
-      return true;
-    if (dotCount > 1)
-      return false;
-  }
-  return false;
+// Overloaded Operators
+Conversion &Conversion::operator=(const Conversion &src)
+{
+	std::cout << "Conversion Assignation operator called" << std::endl;
+	if (this == &src)
+		return *this;
+
+	this->_type = src.getType();
+	this->_char = src.getChar();
+	this->_int = src.getInt();
+	this->_float = src.getFloat();
+	this->_double = src.getDouble();
+	return *this;
 }
 
-static bool isDouble(const std::string &str) {
-  int dotCount = 0;
-  for (size_t i = 0; i < str.length(); i++) {
-    if (i == 0 && (str[i] == '-' || str[i] == '+') && str.length() > 1)
-      continue;
-    if (!std::isdigit(str[i]) && str[i] != '.')
-      return false;
-    if (str[i] == '.')
-      dotCount++;
-    if (dotCount > 1)
-      return false;
-  }
-  return true;
+// Private Methods
+int	Conversion::checkInput()
+{
+	if (this->getInput().compare("nan") == 0 || this->getInput().compare("+inf") == 0 ||
+		this->getInput().compare("-inf") == 0 || this->getInput().compare("+inff") == 0 ||
+		this->getInput().compare("-inff") == 0)
+	{
+		return (NAN_INF);
+	}
+	else if (this->getInput().length() == 1 &&
+		(this->getInput()[0] == '+' || this->getInput()[0] == '-' || // prevents that the input of single digit integers get interpreted as a char
+		this->getInput()[0] == 'f' || this->getInput()[0] == '.'))
+	{
+		return (CHAR);
+	}
+	else if (this->getInput().find_first_of("+-") != this->getInput().find_last_of("+-")) // catches any multiple or mixed use of + and -
+		return (ERROR);
+	else if (this->getInput().find_first_not_of("+-0123456789") == std::string::npos)
+		return (INT);
+	else if (this->getInput().find_first_not_of("+-0123456789.") == std::string::npos)
+	{
+		if (this->getInput().find_first_of(".") != this->getInput().find_last_of(".") || // catches `0..0`
+			isdigit(this->getInput()[this->getInput().find_first_of(".") + 1]) == false || // catches `0.`
+			this->getInput().find_first_of(".") == 0) // catches `.0`
+			return (ERROR);
+		else
+			return (DOUBLE);
+	}
+	else if (this->getInput().find_first_not_of("+-0123456789.f") == std::string::npos)
+	{
+		if (this->getInput().find_first_of("f") != this->getInput().find_last_of("f") || // catches `0.0ff`
+			this->getInput().find_first_of(".") != this->getInput().find_last_of(".") || // catches `0..0f`
+			this->getInput().find_first_of("f") - this->getInput().find_first_of(".") == 1 || //catches `0.f`
+			this->getInput().find_first_of(".") == 0 || // catches `.0f`
+			this->getInput()[this->getInput().find_first_of("f") + 1] != '\0') // catches `0.0f0`
+			return (ERROR);
+		else
+			return (FLOAT);
+	}
+	else if ((this->getInput().length() == 1 && std::isprint(this->getInput()[0])) ||
+		(this->getInput().length() == 1 && std::isalpha(this->getInput()[0])))
+	{
+		return (CHAR);
+	}
+	else
+		return (ERROR);
 }
 
-static int countFractionalPart(std::string str) {
-  size_t posDot = str.find(".");
-  int fractional = 0;
-  std::string newStr = str.substr(posDot + 1);
-  fractional = newStr.length();
-  return fractional;
+void Conversion::fromChar(void)
+{
+	this->_char = static_cast<unsigned char>(this->getInput()[0]);
+	this->_int = static_cast<int>(this->getChar());
+	this->_float = static_cast<float>(this->getChar());
+	this->_double = static_cast<double>(this->getChar());
+}
+void Conversion::fromInt(void)
+{
+	this->_int = static_cast<int>(this->getDouble());
+	this->_char = static_cast<unsigned char>(this->getInt());
+	this->_float = static_cast<float>(this->getDouble());
+}
+void Conversion::fromFloat(void)
+{
+	this->_float = static_cast<float>(this->getDouble());
+	this->_char = static_cast<char>(this->getFloat());
+	this->_int = static_cast<int>(this->getFloat());
+}
+void Conversion::fromDouble(void)
+{
+	this->_char = static_cast<char>(this->getDouble());
+	this->_int = static_cast<int>(this->getDouble());
+	this->_float = static_cast<float>(this->getDouble());
 }
 
-// print types
-static void printChar(char c) {
-  std::cout << "char: '" << c << "'" << std::endl;
+void	Conversion::convertInput(void)
+{
+	void (Conversion::*functionPTRS[])(void) = {&Conversion::fromChar, &Conversion::fromInt, &Conversion::fromFloat, &Conversion::fromDouble};
+	int types[] = {CHAR, INT, FLOAT, DOUBLE};
+
+	this->_type = checkInput();
+
+	if (this->getType() == NAN_INF)
+		return ;
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		if (this->getType() == types[i])
+		{
+			(this->*functionPTRS[i])();
+			break ;
+		}
+	}
+	if (i == 4)
+		throw Conversion::ErrorException();
 }
 
-static void printInt(int value) { std::cout << "int: " << value << std::endl; }
+void	Conversion::printOutput(void)const
+{
+	// display char
+	if (this->getType() != NAN_INF && this->getDouble() <= UCHAR_MAX && this->getDouble() >= 0)
+	{
+		if (isprint(this->getChar()))
+			std::cout << "char: '" << this->getChar() << "'" << std::endl;
+		else
+			std::cout << "char: Non displayable" << std::endl;
+	}
+	else
+		std::cout << "char: impossible" << std::endl;
 
-static void printFloat(float value, int fractional) {
-  if (!fractional)
-    fractional = 1;
-  std::cout << "float: " << std::fixed << std::setprecision(fractional) << value
-            << "f" << std::endl;
+	// display int
+	if (this->getType() != NAN_INF && this->getDouble() >= std::numeric_limits<int>::min() && this->getDouble() <= std::numeric_limits<int>::max())
+	{
+		std::cout << "int: " << this->getInt() << std::endl;
+	}
+	else
+		std::cout << "int: impossible" << std::endl;
+
+	// display float
+	if (this->getType() != NAN_INF)
+	{
+		std::cout << "float: " << this->getFloat();
+		if (this->getFloat() - this->getInt() == 0)
+			std::cout << ".0f" << std::endl;
+		else
+			std::cout << "f" << std::endl;
+	}
+	else
+	{
+		if (this->getInput() == "nan" || this->getInput() == "nanf")
+			std::cout << "float: nanf" << std::endl;
+		else if (this->getInput()[0] == '+')
+			std::cout << "float: +inff" << std::endl;
+		else
+			std::cout << "float: -inff" << std::endl;
+	}
+
+	// display double
+	if (this->getType() != NAN_INF)
+	{
+		std::cout << "double: " << this->getDouble();
+		if (this->getDouble() < std::numeric_limits<int>::min() || this->getDouble() > std::numeric_limits<int>::max() ||
+			this->getDouble() - this->getInt() == 0)
+		{
+			std::cout << ".0" << std::endl;
+		}
+		else
+			std::cout << std::endl;
+	}
+	else
+	{
+		if (this->getInput() == "nan" || this->getInput() == "nanf")
+			std::cout << "double: nan" << std::endl;
+		else if (this->getInput()[0] == '+')
+			std::cout << "double: +inf" << std::endl;
+		else
+			std::cout << "double: -inf" << std::endl;
+	}
 }
 
-static void printDouble(double value, int fractional) {
-  if (!fractional)
-    fractional = 1;
-  std::cout << "double: " << std::fixed << std::setprecision(fractional)
-            << value << std::endl;
+// Exceptions
+const char *Conversion::ErrorException::what(void) const throw()
+{
+	return ("Error: Impossible to print or input not convertable");
+};
+
+// Getter
+std::string	Conversion::getInput(void)const
+{
+	return (this->_input);
 }
 
-// valid types
-static int validChar(char c) {
-  if (c >= 32 && c <= 126)
-    return true;
-  else if (c == 127 || (c >= 0 && c <= 31))
-    std::cout << "char: Non displayable" << std::endl;
-  else
-    std::cout << "char: impossible" << std::endl;
-  return false;
+int	Conversion::getType(void)const
+{
+	return (this->_type);
 }
 
-static int validInt(int value) {
-  if ((value < std::numeric_limits<int>::min()) ||
-      value > std::numeric_limits<int>::max())
-    std::cout << "int: impossible" << std::endl;
-  else {
-    return true;
-  }
-  return false;
+char	Conversion::getChar(void)const
+{
+	return (this->_char);
 }
 
-static int validFloat(float value) {
-  if (value < -std::numeric_limits<float>::max() ||
-      value > std::numeric_limits<float>::max())
-
-    std::cout << "float: impossible" << std::endl;
-  else {
-    return true;
-  }
-  return false;
+int	Conversion::getInt(void)const
+{
+	return (this->_int);
 }
 
-static int validDouble(double value) {
-  if (value < -std::numeric_limits<double>::max() ||
-      value > std::numeric_limits<double>::max())
-    std::cout << "double: impossible" << std::endl;
-  else
-    return true;
-
-  return false;
+float	Conversion::getFloat(void)const
+{
+	return (this->_float);
 }
 
-// convert types
-static void charToIntFloatDouble(char input, int fractional) {
-  int intValue = static_cast<int>(input);
-  float floatValue = static_cast<float>(input);
-  double doubleValue = static_cast<double>(input);
-  printChar(input);
-  if (validInt(intValue)) {
-    printInt(intValue);
-  }
-  if (validFloat(floatValue)) {
-    printFloat(floatValue, fractional);
-  }
-  if (validDouble(doubleValue)) {
-    printDouble(doubleValue, fractional);
-  }
+double Conversion::getDouble(void)const
+{
+	return (this->_double);
 }
-
-static void intToCharFloatDouble(int input, int fractional) {
-  char charValue = static_cast<char>(input);
-  float floatValue = static_cast<float>(input);
-  double doubleValue = static_cast<double>(input);
-  if (input < 0 || input > 127)
-    std::cout << "char: impossible" << std::endl;
-  else if (validChar(charValue)) {
-    printChar(charValue);
-  }
-  printInt(input);
-  if (validFloat(floatValue)) {
-    printFloat(floatValue, fractional);
-  }
-  if (validDouble(doubleValue)) {
-    printDouble(doubleValue, fractional);
-  }
-}
-
-static void floatToCharIntDouble(float input, int fractional) {
-  char charValue = static_cast<char>(input);
-  int intValue = static_cast<int>(input);
-  double doubleValue = static_cast<double>(input);
-  if (intValue < 0 || intValue > 127)
-    std::cout << "char: impossible" << std::endl;
-  else if (validChar(charValue)) {
-    printChar(charValue);
-  }
-  if (validInt(intValue)) {
-    printInt(intValue);
-  }
-  printFloat(input, fractional);
-  if (validDouble(doubleValue)) {
-    printDouble(doubleValue, fractional);
-  }
-}
-
-static void doubleToCharIntFloat(double input, int fractional) {
-  char charValue = static_cast<char>(input);
-  int intValue = static_cast<int>(input);
-  float floatValue = static_cast<float>(input);
-  if (intValue < 0 || intValue > 127)
-    std::cout << "char: impossible" << std::endl;
-  else if (validChar(charValue)) {
-    printChar(charValue);
-  }
-
-  if (validInt(intValue)) {
-    printInt(intValue);
-  }
-  if (validFloat(floatValue)) {
-    printFloat(floatValue, fractional);
-  }
-  printDouble(input, fractional);
-}
-
-static void convertByType(std::string input) {
-  std::istringstream iss(input);
-  int fractionalPart = 0;
-  if (isChar(input)) {
-    char inputChar;
-    iss >> std::noskipws >> inputChar;
-    charToIntFloatDouble(inputChar, fractionalPart);
-  } else if (isInteger(input)) {
-    int inputInt;
-    iss >> std::noskipws >> inputInt;
-    if (iss.fail()) {
-      std::cout << "Int: impossible" << std::endl;
-      return;
-    }
-    intToCharFloatDouble(inputInt, fractionalPart);
-  } else if (isFloat(input)) {
-    float inputFloat;
-    fractionalPart = countFractionalPart(input);
-    fractionalPart -= 1;
-    iss >> std::noskipws >> inputFloat;
-    if (iss.fail()) {
-      std::cout << "float: impossible" << std::endl;
-      return;
-    }
-    floatToCharIntDouble(inputFloat, fractionalPart);
-  } else if (isDouble(input)) {
-    double inputDouble;
-    fractionalPart = countFractionalPart(input);
-    iss >> std::noskipws >> inputDouble;
-    if (iss.fail()) {
-      std::cout << "double: impossible" << std::endl;
-      return;
-    }
-    doubleToCharIntFloat(inputDouble, fractionalPart);
-  } else if (input == "nan" || input == "nanf") {
-    std::cout << "char: impossible" << std::endl;
-    std::cout << "int: impossible" << std::endl;
-    std::cout << "float: nanf" << std::endl;
-    std::cout << "double: nan" << std::endl;
-  } else if (input == "+inf" || input == "+inff") {
-    std::cout << "char: impossible" << std::endl;
-    std::cout << "int: impossible" << std::endl;
-    std::cout << "float: +inff" << std::endl;
-    std::cout << "double: +inf" << std::endl;
-  } else if (input == "-inf" || input == "-inff") {
-    std::cout << "char: impossible" << std::endl;
-    std::cout << "int: impossible" << std::endl;
-    std::cout << "float: -inff" << std::endl;
-    std::cout << "double: -inf" << std::endl;
-  } else
-    std::cout << "Invalid input" << std::endl;
-}
-
-void ScalarConverter::convert(std::string input) { convertByType(input); }
