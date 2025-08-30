@@ -3,6 +3,7 @@
 
 int main(void) {
   Data data = {"hello", 42, "world"};
+<<<<<<< HEAD
     Data* originalPtr = &data;
 
   std::cout << "Original Data: " << originalPtr->s1 << ", " << originalPtr->i << ", " << originalPtr->s2 << std::endl;
@@ -20,6 +21,18 @@ int main(void) {
   } else {
     std::cout << "\n❌ Failure: Pointers are different." << std::endl;
   }
+=======
+  std::cout << "s1: " << data.s1 << " - value: " << data.i
+            << " - s2: " << data.s2 << std::endl;
+  uintptr_t seriData = Serialize::serialize(&data);
+  std::cout << "s1: " << data.s1 << " - value: " << data.i
+            << " - s2: " << data.s2 << std::endl;
+  std::cout << "Data serialize: " << seriData << std::endl;
+  Data *deseData = Serialize::deserialize(seriData);
+  std::cout << "s1: " << deseData->s1 << " - value: " << deseData->i
+            << " - s2: " << deseData->s2 << std::endl;
+    std::cout << "Data serialize: " << seriData << std::endl;
+>>>>>>> 77865698d07d5c6a4de48da70cc633f6ca211f15
 
   return 0;
 

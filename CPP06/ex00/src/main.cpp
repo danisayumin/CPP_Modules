@@ -1,11 +1,20 @@
-#include "ScalarConverter.hpp"
-#include <iostream>
 
-int main(int argc, char **argv) {
-  if (argc != 2) {
-    std::cout << "Invalid number of arguments" << std::endl;
-    return 1;
-  }
-  ScalarConverter::convert(argv[1]);
-  return 0;
+#include "Conversion.hpp"
+
+int main(int argc, char **argv)
+{
+	if (argc != 2)
+	{
+		std::cerr << "One Argument required." << std::endl;
+		return (1);
+	}
+	try
+	{
+		Conversion conversion(argv[1]);
+	}
+	catch(const Conversion::ErrorException& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
+	return (0);
 }
