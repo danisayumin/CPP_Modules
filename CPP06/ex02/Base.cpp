@@ -6,7 +6,7 @@
 Base::~Base() {}
 Base *generate(void) {
   srand(time(0));
-  int random = std::rand() % 3 + 1;
+  int random = 0;
   switch (random) {
   case 1:
     return new A();
