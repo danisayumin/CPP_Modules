@@ -1,5 +1,5 @@
-NAME = ex02
-CC = c++
+NAME = ex01
+CC = c++ -g3
 FLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -rf
 INC = -I ./
@@ -9,6 +9,7 @@ SRCS_DIR = ./
 OBJS_DIR = objs/
 
 FILE = main \
+			 Span 
 
 OBJS = $(addprefix $(OBJS_DIR), $(addsuffix .o, $(FILE)))
 

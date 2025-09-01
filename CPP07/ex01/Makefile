@@ -1,35 +1,38 @@
-RED					= $(shell tput setaf 1)
-GREEN				= $(shell tput setaf 2)
-YELLOW				= $(shell tput setaf 3)
-BLUE				= $(shell tput setaf 4)
-MAGENT				= $(shell tput setaf 5)
-RESET				= $(shell tput sgr0)
+NAME = ex01
+CC = c++
+FLAGS = -Wall -Wextra -Werror -std=c++98
+RM = rm -rf
+INC = -I ./
+LEAK = valgrind --leak-check=full --show-leak-kinds=all
 
-NAME				= iter
-INCLUDES 			= -I
-FILES				= $(wildcard *.cpp)
-OBJS				= $(FILES:%.cpp=%.o)
-COMPILER			= c++
-CFLAGS				= -Wall -Wextra -Werror -std=c++98
+SRCS_DIR = ./
+OBJS_DIR = objs/
 
-all: 				$(NAME)
+FILE = main \
 
-$(NAME):			$(OBJS)
-					@$(COMPILER) $(CFLAGS) $(OBJS) -o $(NAME)
-					@echo "$(BLUE)Compiled $(NAME) successfully$(RESET)"
+OBJS = $(addprefix $(OBJS_DIR), $(addsuffix .o, $(FILE)))
 
-%.o:				%.cpp
-					@$(COMPILER) $(CFLAGS) -c $< -o $@
-					@echo "$(GREEN)Compiled$(RESET) $(notdir $<)"
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+
+$(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp | $(OBJS_DIR)
+	$(CC) $(FLAGS) $(INC) -c $< -o $@
+
+$(OBJS_DIR):
+	mkdir -p $(OBJS_DIR)
+
+val:
+	@make
+	@$(LEAK) ./$(NAME)
 
 clean:
-					@echo "$(RED)Removing$(RESET) $(NAME) objects"
-					@rm -rf $(OBJS)
+	$(RM) $(OBJS_DIR)
 
-fclean: 			clean
-					@echo "$(RED)Removing$(RESET) $(NAME)"
-					@rm -rf $(NAME)
+fclean: clean
+	$(RM) $(NAME)
 
-re:					fclean all
+re: fclean all
 
-.PHONY: 			all clean fclean re
+.PHONY: all clean fclean re
